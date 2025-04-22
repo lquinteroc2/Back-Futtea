@@ -4,6 +4,7 @@ import { Users } from 'src/users/entities/user.entity';
 export enum CredentialType {
   LOCAL = 'local',
   GOOGLE = 'google',
+  APPLE = 'apple'
   // puedes agregar más
 }
 

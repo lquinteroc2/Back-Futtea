@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { FileUploadModule } from 'src/file-upload/file-upload.module';
+import { CredentialModule } from 'src/credential/credential.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Users]), FileUploadModule],
+  imports: [TypeOrmModule.forFeature([Users]), FileUploadModule, CredentialModule],
   controllers: [AuthController],
   providers: [AuthService, UsersService],
 })

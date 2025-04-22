@@ -1,4 +1,4 @@
-import { Credential, CredentialType } from "src/auth/entities/credential.entity";
+import { Credential, CredentialType } from "src/credential/entities/credential.entity";
 
 
 export function getLocalCredential(credentials: Credential[]): Credential | undefined {

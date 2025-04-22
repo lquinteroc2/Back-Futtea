@@ -4,6 +4,8 @@ import {
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
+import { GoogleAuthDto } from './dto/google-auth.dto';
+import { AppleAuthDto } from './dto/apple-auth.dto';
 
 
 
@@ -27,4 +29,14 @@ export class AuthController {
     const { identifier, password } = credentials;
     return this.authService.signIn(identifier, password);
   }
+
+  @Post('google')
+  googleAuth(@Body() dto: GoogleAuthDto) {
+    return this.authService.googleLogin(dto);
+  }
+
+  @Post('apple')
+  appleAuth(@Body() dto: AppleAuthDto) {
+  return this.authService.appleLogin(dto);
+}
 }

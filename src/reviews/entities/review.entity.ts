@@ -1,4 +1,4 @@
-import { Location } from 'src/locations/entities/location.entity';
+import { Field } from 'src/locations/entities/field.entity';
 import { Users } from 'src/users/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
@@ -20,6 +20,6 @@ export class Review {
   @ManyToOne(() => Users, user => user.reviews)
   user: Users;
 
-  @ManyToOne(() => Location, location => location.reviews)
- location: Location;
+  @ManyToOne(() => Field, field => field.reviews)
+  field: Field;
 }

@@ -6,10 +6,10 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { JWT_SECRET } from 'src/config/env';
 import { getLocalCredential } from 'src/utils/credential';
-import { Credential, CredentialType } from 'src/auth/entities/credential.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FilesUploadRepository } from 'src/file-upload/file-upload.repository';
 import { sendResetPasswordEmail, sendVerificationEmail } from 'src/utils/mailer';
+import { Credential, CredentialType } from 'src/credential/entities/credential.entity';
 
 
 
@@ -24,7 +24,7 @@ export class UsersService {
 
   async getUsers(page: number, limit: number) {
     const [users, total] = await this.usersRepository.findAndCount({
-      select: ['uuid', 'email', 'name', 'phone', 'address', 'role', 'banned'], // Evitamos traer `password` y `isAdmin`
+      select: ['uuid', 'email', 'name','user_name','country','profileImage', 'phone', 'address', 'role', 'banned'], 
       skip: (page - 1) * limit,
       take: limit,
     });
@@ -35,13 +35,18 @@ export class UsersService {
   async getUser(uuid: string) {
     const user = await this.usersRepository.findOne({
       where: { uuid },
-      select: ['uuid', 'email', 'name', 'phone', 'address', 'role', 'banned'], // Evitamos `password` y `isAdmin`
+      select: ['uuid', 'email', 'name', 'user_name', 'country', 'profileImage', 'phone', 'address', 'role', 'banned'],
     });
 
     if (!user) throw new BadRequestException('User not found');
     return user;
   }
-
+  
+  async create(data: Partial<Users>) {
+  const user = this.usersRepository.create(data);
+  return this.usersRepository.save(user);
+}
+   
   async addUser(user: Partial<Users> & { password: string }) {
     const { password, email, user_name, ...userData } = user;
     
@@ -51,6 +56,14 @@ export class UsersService {
     });
   
     if (existingUser) {
+      const existingLocalCredential = getLocalCredential(existingUser.credentials);
+    
+      if (!existingLocalCredential) {
+        throw new BadRequestException(
+          'Ya existe una cuenta con este correo registrada mediante Google. Inicia sesión con Google.'
+        );
+      }
+    
       throw new BadRequestException('El correo electrónico o el nombre de usuario ya están registrados');
     }
   
@@ -98,6 +111,7 @@ export class UsersService {
     }
   
     delete user.password;
+    delete (user as any).passwordConfirmation;
   
     // 📷 Eliminar imagen anterior si viene una nueva
     if (user.profileImage && existingUser.profileImage) {

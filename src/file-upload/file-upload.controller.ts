@@ -53,4 +53,40 @@ export class FileUploadController {
   ) {
     return this.fileUploadService.updateImage(imageUUID, file);
   }
+  
+  @Put('uploadLocationImages/:locationId')
+  @UseInterceptors(FilesInterceptor('files', 5))
+  uploadLocationImages(
+    @Param('locationId') locationId: string,
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 500000 }),
+          new FileTypeValidator({ fileType: /(jpg|jpeg|png|webp)$/ }),
+        ],
+      }),
+    )
+    files: Express.Multer.File[],
+  ) {
+    return this.fileUploadService.uploadLocationImages(files, locationId);
+  }
+
+  @Put('uploadFieldImages/:fieldId')
+  @UseInterceptors(FilesInterceptor('files', 5))
+  uploadFieldImages(
+    @Param('fieldId') fieldId: string,
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 500000 }),
+          new FileTypeValidator({ fileType: /(jpg|jpeg|png|webp)$/ }),
+        ],
+      }),
+    )
+    files: Express.Multer.File[],
+  ) {
+    return this.fileUploadService.uploadFieldImages(files, fieldId);
+  }
+
+
 }

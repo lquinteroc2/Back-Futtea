@@ -89,3 +89,10 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsBoolean()
   banned?: boolean; // NUEVO: Permite actualizar el estado de baneo
 }
+
+
+
+export class ToggleBanDto {
+  @IsBoolean({ message: 'El valor de "ban" debe ser booleano (true o false)' })
+  ban: boolean;
+}

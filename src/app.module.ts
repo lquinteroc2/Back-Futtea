@@ -13,6 +13,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { LocationsModule } from './locations/locations.module';
 import typeorm from './config/typeorm';
+import { CredentialModule } from './credential/credential.module';
 
 @Module({
   imports: [
@@ -41,7 +42,8 @@ import typeorm from './config/typeorm';
     FileUploadModule, 
     MatchesModule, 
     ReviewsModule, 
-    LocationsModule,
+    LocationsModule, 
+    CredentialModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -15,4 +15,7 @@ export class CreateMatchDto {
 
   @IsNumber()
   maxPlayers: number;
+  
+  @IsNumber()
+  duration?: number;
 }

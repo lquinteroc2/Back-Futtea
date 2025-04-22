@@ -25,7 +25,6 @@ export class FilesUploadRepository {
         return readable;
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       bufferToStream(file.buffer).pipe(upload);
     });
   }

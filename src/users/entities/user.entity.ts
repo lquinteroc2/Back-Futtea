@@ -1,5 +1,6 @@
-import { Credential } from 'src/auth/entities/credential.entity';
+import { Credential } from 'src/credential/entities/credential.entity';
 import { UploadedImage } from 'src/file-upload/entities/file-upload.entity';
+import { Location } from 'src/locations/entities/location.entity';
 import { Match } from 'src/matches/entities/match.entity';
 import { Notification } from 'src/notifications/entities/notification.entity';
 import { Review } from 'src/reviews/entities/review.entity';
@@ -120,4 +121,7 @@ export class Users {
 
   @OneToMany(() => Review, (review) => review.user)
   reviews: Review[];
+
+  @OneToMany(() => Location, (location) => location.admin)
+  ownedLocations: Location[];
 }

@@ -1,6 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Match } from 'src/matches/entities/match.entity';
-import { Review } from 'src/reviews/entities/review.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+} from 'typeorm';
+import { Field } from './field.entity';
+import { Users } from 'src/users/entities/user.entity';
+import { UploadedImage } from 'src/file-upload/entities/file-upload.entity';
+import { Point } from 'geojson';
 
 @Entity()
 export class Location {
@@ -19,12 +27,20 @@ export class Location {
   @Column()
   country: string;
 
-  @Column({ nullable: true })
-  coordinates: string; // Podrías guardar lat/lng como JSON o string
+  @OneToMany(() => UploadedImage, (image) => image.location)
+  images: UploadedImage[];
 
-  @OneToMany(() => Match, (match) => match.location)
-  matches: Match[];
+  @Column({
+    type: 'geography',
+    spatialFeatureType: 'Point',
+    srid: 4326,
+    nullable: true,
+  })
+  coordinates: Point;
 
-  @OneToMany(() => Review, (review) => review.location)
-  reviews: Review[];
+  @OneToMany(() => Field, (field) => field.location)
+  fields: Field[];
+
+  @ManyToOne(() => Users, (user) => user.ownedLocations)
+  admin: Users; // El dueño de la sede
 }

@@ -22,7 +22,7 @@ import { UsersService } from './users.service';
 // import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Roles } from 'src/decorators/roles.decorator';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { ToggleBanDto, UpdateUserDto } from './dto/update-user.dto';
 import { Role } from './entities/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from 'src/file-upload/file-upload.service';
@@ -84,7 +84,10 @@ export class UsersController {
     @Body() user: UpdateUserDto,
     @Req() req,
   ) {
-    if (req.user.uuid !== uuid) {
+    const isSameUser = req.user.uuid === uuid;
+    const isSuperAdmin = req.user.role === Role.SUPERADMIN; // o admin si quieres
+  
+    if (!isSameUser && !isSuperAdmin) {
       throw new UnauthorizedException('No puedes modificar otro perfil');
     }
     return this.usersService.updateUser(uuid, user);
@@ -117,7 +120,7 @@ export class UsersController {
     return this.usersService.updateUser(userUUID, updateProfileDto);
   }
   
-  // Modificar el rol de un usuario (Solo admin)
+  // Modificar el rol de un usuario (Solo superAdmin)
   // @ApiBearerAuth()
   @Put(':uuid/role')
   @UseGuards(AuthGuard, RolesGuard)
@@ -136,9 +139,9 @@ export class UsersController {
   @Roles(Role.SUPERADMIN)
   toggleBanUser(
     @Param('uuid', new ParseUUIDPipe()) uuid: string,
-    @Body('ban') ban: boolean,
+    @Body() body: ToggleBanDto,
   ) {
-    return this.usersService.toggleBanUser(uuid, ban);
+    return this.usersService.toggleBanUser(uuid, body.ban);
   }
 
 
@@ -156,9 +159,9 @@ export class UsersController {
     return this.usersService.deleteUser(uuid);
   }
 
-    // Eliminar otro usuario (Solo admin)
+    // Eliminar otro usuario (Solo superAdmin)
     // @ApiBearerAuth()
-    @Delete(':uuid/admin')
+    @Delete(':uuid/delete')
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(Role.SUPERADMIN)
     deleteUser(@Param('uuid', new ParseUUIDPipe()) uuid: string) {
