@@ -46,29 +46,29 @@ export class CreateUserDto {
   @Validate(MatchPassword, ['password'])
   passwordConfirmation: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(3)
   @MaxLength(80)
-  address: string;
+  address?: string;
 
   @IsOptional()
   @Matches(/^[0-9]{10}$/, {
     message: 'Phone must be 10 digits',
   })
-  phone: string;
+  phone?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(5)
   @MaxLength(20)
-  country: string;
+  country?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(5)
   @MaxLength(20)
-  city: string;
+  city?: string;
 
   @IsOptional() // Opcional si no quieres que los usuarios establezcan su propio rol
   @IsEnum(Role, { message: 'role must be either user, admin, or moderator' })

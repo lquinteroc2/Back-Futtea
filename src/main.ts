@@ -13,7 +13,7 @@ async function bootstrap() {
     app.enableCors();
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-    await app.listen(PORT)
+    await app.listen(PORT, '0.0.0.0')
     console.log(`Server running on port ${process.env.PORT ?? 3000}`);
     
   } catch (error) {

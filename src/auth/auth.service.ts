@@ -7,6 +7,7 @@ import { GoogleAuthDto } from './dto/google-auth.dto';
 import { CredentialType } from '../credential/entities/credential.entity';
 import { CredentialService } from 'src/credential/credential.service';
 import { AppleAuthDto } from './dto/apple-auth.dto';
+import { Users } from 'src/users/entities/user.entity';
 
 interface AppleIdTokenPayload {
   email: string;
@@ -29,6 +30,18 @@ export class AuthService {
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const jsonPayload = Buffer.from(base64, 'base64').toString('utf8');
     return JSON.parse(jsonPayload) as AppleIdTokenPayload; // Afirmación de tipo
+  }
+  private sanitizeUser(user: Users) {
+    // Creamos una copia del objeto user sin las propiedades no deseadas
+    const userWithoutSensitiveData = { ...user };
+    
+    // Eliminamos las propiedades que no son necesarias
+    delete userWithoutSensitiveData.credentials;
+    delete userWithoutSensitiveData.notifications;
+    delete userWithoutSensitiveData.verificationCode;
+    delete userWithoutSensitiveData.verificationCodeExpiresAt;
+    
+    return userWithoutSensitiveData;
   }
 
   async signIn(identifier: string, password: string) {
@@ -53,7 +66,9 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new BadRequestException('Credenciales inválidas');
     }
-  
+    
+    const sanitizedUser = this.sanitizeUser(foundUser);
+
     const userPayload = {
       uuid: foundUser.uuid,
       email: foundUser.email,
@@ -66,6 +81,7 @@ export class AuthService {
     return {
       message: 'Inicio de sesión exitoso',
       token,
+      user: sanitizedUser,
     };
   }
 

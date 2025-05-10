@@ -49,17 +49,20 @@ export class Users {
   @Column({
     type: 'varchar',
     length: 50,
+    nullable: true,
   })
   country: string;
 
   @Column({
     type: 'text',
+    nullable: true,
   })
   address: string;
 
   @Column({
     type: 'varchar',
     length: 50,
+    nullable: true,
   })
   city: string;
 
