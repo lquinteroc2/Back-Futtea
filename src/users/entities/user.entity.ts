@@ -1,4 +1,4 @@
-import { Credential } from 'src/credential/entities/credential.entity';
+import { Credential } from '../../credential/entities/credential.entity';
 import { UploadedImage } from 'src/file-upload/entities/file-upload.entity';
 import { Location } from 'src/locations/entities/location.entity';
 import { Match } from 'src/matches/entities/match.entity';
@@ -16,6 +16,8 @@ export enum Role {
   SUPERADMIN= "superAdmin",
   ADMIN = "admin",
   USER = "user",
+  OWNER = "owner",
+  FREE = "free"
 }
 
 @Entity({
