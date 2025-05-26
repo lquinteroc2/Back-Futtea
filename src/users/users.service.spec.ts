@@ -94,9 +94,10 @@ describe('UsersService', () => {
     repository = module.get<Repository<Users>>(getRepositoryToken(Users));
   });
 
+  describe('userService', () => {
   it('debería estar definido', () => {
     expect(usersService).toBeDefined();
-  });
+  })});
 
   it('debe retornar todos los usuario', async () => {
     const result = await usersService.getUsers(1, 10);
